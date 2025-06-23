@@ -11,12 +11,14 @@ use Inertia\Inertia;
 class ArticleController extends Controller
 {
     public function index()
-    {
-        $articles = Article::with(['category', 'tags'])->get();
-        return Inertia::render('Welcome', [
-            'articles' => $articles
-        ]);
-    }
+{
+    $articles = Article::with(['category', 'tags', 'user', 'likes'])->get();
+
+    return Inertia::render('Welcome', [
+        'articles' => $articles
+    ]);
+}
+
 
     public function create()
     {
