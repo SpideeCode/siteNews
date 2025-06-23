@@ -16,12 +16,14 @@ use App\Http\Middleware\AuteurPass;
 use App\Http\Middleware\LecteurPass;
 
 Route::get('/', function () {
-    $articles = Article::with(['category', 'tags', 'user', 'likes'])->get();
+    $articles = Article::with(['category', 'tags', 'user', 'likes', 'latestComment.user'])->get();
+
     return Inertia::render('welcome', [
         'articles' => $articles,
         'auth' => auth()->user(),
     ]);
 })->name('home');
+
 
 Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -50,6 +52,6 @@ Route::middleware(['auth', AdminPass::class])->group(function () {
     Route::get('/admin/users', fn () => Inertia::render('Admin/Users'));
 });
 
-// Charger les autres routes
+
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

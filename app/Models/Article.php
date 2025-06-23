@@ -40,4 +40,9 @@ class Article extends Model
     {
         return $this->hasMany(Like::class);
     }
+    public function latestComment()
+{
+    return $this->hasOne(Comment::class)->latestOfMany(); 
+}
+
 }
