@@ -37,6 +37,10 @@ export default function Welcome() {
             router.post('/likes', { article_id: article.id });
         }
     };
+     const handleDelete = (articleId) => {
+        if (!confirm('Voulez-vous vraiment supprimer cet article ?')) return;
+        router.delete(`/articles/${articleId}`);
+    };
 
     return (
         <div className="mx-auto min-h-screen bg-white p-6 text-black">
@@ -53,6 +57,14 @@ export default function Welcome() {
 
                         return (
                             <li key={article.id} className="rounded border p-4 shadow-sm">
+                                {auth?.role === 'webmaster' && (
+                                <button
+                                    onClick={() => handleDelete(article.id)}
+                                    className=" top-2 right-2 rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700"
+                                >
+                                    Supprimer
+                                </button>
+                            )}
                                 <h3 className="mb-2 text-xl font-semibold">{article.title}</h3>
                                 <p className="mb-2">{article.content}</p>
                                 <p className="text-sm text-gray-600">
@@ -102,6 +114,7 @@ export default function Welcome() {
                                     ) : (
                                         <p className="text-gray-500 italic">Connectez-vous pour commenter.</p>
                                     )}
+                                    
                                 </div>
                             </li>
                         );

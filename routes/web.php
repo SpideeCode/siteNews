@@ -19,9 +19,14 @@ Route::get('/', function () {
 
     return Inertia::render('welcome', [
         'articles' => $articles,
-        'auth' => auth()->user(),
+        'auth' => auth()->user() ? [
+            'id' => auth()->id(),
+            'name' => auth()->user()->name,
+            'role' => auth()->user()->role,
+        ] : null,
     ]);
 })->name('home');
+
 
 Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
