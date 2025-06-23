@@ -37,8 +37,7 @@ export default function Nav() {
 
         {(role === 'webmaster' || role === 'admin') && (
           <>
-            <Link href="/categories" className="hover:underline">Catégories</Link>
-            <Link href="/tags" className="hover:underline">Tags</Link>
+            <Link href="/webmaster/manage" className="hover:underline">Gestion Webmaster</Link>
           </>
         )}
 

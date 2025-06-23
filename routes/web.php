@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Article;
+use App\Models\Category;  
+use App\Models\Tag;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ArticleController;
@@ -53,6 +55,17 @@ Route::middleware(['auth', AuteurPass::class])->group(function () {
 Route::middleware(['auth', WebmasterPass::class])->group(function () {
     Route::resource('/categories', CategoryController::class)->except(['show']);
     Route::resource('/tags', TagController::class)->except(['show']);
+
+
+    Route::get('/webmaster/manage', function () {
+        $categories = Category::all();
+        $tags = Tag::all();
+        return Inertia::render('WebmasterManage', [
+            'categories' => $categories,
+            'tags' => $tags,
+        ]);
+    })->name('webmaster.manage');
+
 });
 
 // Routes accessibles uniquement à Admin
