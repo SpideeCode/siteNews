@@ -1,119 +1,48 @@
-import { Head, useForm } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import { router, Link } from "@inertiajs/react";
+import { useState } from "react";
 
-import InputError from '@/components/input-error';
-import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AuthLayout from '@/layouts/auth-layout';
+function Register() {
 
-type RegisterForm = {
-    name: string;
-    email: string;
-    password: string;
-    password_confirmation: string;
-};
+    const [values, setValues] = useState({
+        name: "",             
+        date: "",
+        age: 0,
+        email: "",
+        password: "",
+        password_confirmation: ""
+    })
 
-export default function Register() {
-    const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
-    });
+    const inscription = (e) => {
+        e.preventDefault()
+        router.post('/register', values)
+    }
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
-        post(route('register'), {
-            onFinish: () => reset('password', 'password_confirmation'),
-        });
-    };
-
-    return (
-        <AuthLayout title="Create an account" description="Enter your details below to create your account">
-            <Head title="Register" />
-            <form className="flex flex-col gap-6" onSubmit={submit}>
-                <div className="grid gap-6">
-                    <div className="grid gap-2">
-                        <Label htmlFor="name">Name</Label>
-                        <Input
-                            id="name"
-                            type="text"
-                            required
-                            autoFocus
-                            tabIndex={1}
-                            autoComplete="name"
-                            value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
-                            disabled={processing}
-                            placeholder="Full name"
-                        />
-                        <InputError message={errors.name} className="mt-2" />
-                    </div>
-
-                    <div className="grid gap-2">
-                        <Label htmlFor="email">Email address</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            required
-                            tabIndex={2}
-                            autoComplete="email"
-                            value={data.email}
-                            onChange={(e) => setData('email', e.target.value)}
-                            disabled={processing}
-                            placeholder="email@example.com"
-                        />
-                        <InputError message={errors.email} />
-                    </div>
-
-                    <div className="grid gap-2">
-                        <Label htmlFor="password">Password</Label>
-                        <Input
-                            id="password"
-                            type="password"
-                            required
-                            tabIndex={3}
-                            autoComplete="new-password"
-                            value={data.password}
-                            onChange={(e) => setData('password', e.target.value)}
-                            disabled={processing}
-                            placeholder="Password"
-                        />
-                        <InputError message={errors.password} />
-                    </div>
-
-                    <div className="grid gap-2">
-                        <Label htmlFor="password_confirmation">Confirm password</Label>
-                        <Input
-                            id="password_confirmation"
-                            type="password"
-                            required
-                            tabIndex={4}
-                            autoComplete="new-password"
-                            value={data.password_confirmation}
-                            onChange={(e) => setData('password_confirmation', e.target.value)}
-                            disabled={processing}
-                            placeholder="Confirm password"
-                        />
-                        <InputError message={errors.password_confirmation} />
-                    </div>
-
-                    <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
-                        {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Create account
-                    </Button>
+    return(
+        <div className="bg-white min-h-screen text-black">
+            <form onSubmit={inscription} className="w-1/2 mx-auto pt-5 flex flex-col gap-3">
+                <div className="w-full flex flex-col">
+                    <label htmlFor="">Nom</label>
+                    <input type="text" onChange={(e) => setValues({...values, name: e.target.value})} className="border rounded p-2" placeholder="Test" />
                 </div>
-
-                <div className="text-center text-sm text-muted-foreground">
-                    Already have an account?{' '}
-                    <TextLink href={route('login')} tabIndex={6}>
-                        Log in
-                    </TextLink>
+                <div className="w-full flex flex-col">
+                    <label htmlFor="">Email</label>
+                    <input type="email" onChange={(e) => setValues({...values, email: e.target.value})} className="border rounded p-2" placeholder="test@mail.com" />
                 </div>
+                <div className="w-full flex flex-col">
+                    <label htmlFor="">Mot de passe</label>
+                    <input type="password" onChange={(e) => setValues({...values, password: e.target.value})} className="border rounded p-2" placeholder="mdp min. 8 caractères" />
+                </div>
+                <div className="w-full flex flex-col">
+                    <label htmlFor="">Confirmation de mot de passe</label>
+                    <input type="password" onChange={(e) => setValues({...values, password_confirmation: e.target.value})} className="border rounded p-2" />
+                </div>
+                <div className="w-full">
+                    <button type="submit" className="w-full bg-gray-700 text-white rounded p-2 cursor-pointer hover:bg-gray-500">Inscription</button>
+                </div>
+                <button>Vous avez déjà un compte ? <Link href="/login" className="text-blue-500 cursor-pointer hover:text-blue-400">Connexion</Link></button>
             </form>
-        </AuthLayout>
-    );
+        </div>
+    )
 }
+
+export default Register;
