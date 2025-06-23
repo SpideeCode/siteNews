@@ -5,6 +5,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 
 
+
 Route::get('/', function () {
     $articles = Article::with(['category', 'tags', 'user', 'likes'])->get();
     return Inertia::render('welcome', [
