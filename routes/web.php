@@ -38,7 +38,7 @@ Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
 Route::middleware(['auth', LecteurPass::class])->group(function () {
     Route::post('/comments', [CommentController::class, 'store']);
     Route::post('/likes', [LikeController::class, 'store']);
-    Route::delete('/likes/{id}', [LikeController::class, 'destroy']);
+    Route::delete('/likes/{like}', [LikeController::class, 'destroy']);
 });
 
 // Routes accessibles à Auteur, Webmaster, Admin

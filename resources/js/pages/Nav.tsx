@@ -7,7 +7,7 @@ export default function Nav() {
     router.post('/logout');
   };
 
-  if (!auth) {
+  if (!auth || !auth.id) {
     return (
       <nav className="flex justify-end gap-4 bg-gray-800 text-white px-6 py-4">
         <Link href="/login">
@@ -30,15 +30,11 @@ export default function Nav() {
         <Link href="/" className="hover:underline">Accueil</Link>
 
         {(role === 'auteur' || role === 'webmaster' || role === 'admin') && (
-          <>
-            <Link href="/mes-articles" className="hover:underline">Mes articles</Link>
-          </>
+          <Link href="/mes-articles" className="hover:underline">Mes articles</Link>
         )}
 
         {(role === 'webmaster' || role === 'admin') && (
-          <>
-            <Link href="/webmaster/manage" className="hover:underline">Gestion Webmaster</Link>
-          </>
+          <Link href="/webmaster/manage" className="hover:underline">Gestion Webmaster</Link>
         )}
 
         {role === 'admin' && (

@@ -4,7 +4,7 @@ import Nav from './Nav';
 
 export default function Welcome() {
     const { articles, auth } = usePage().props;
-    const [commentTexts, setCommentTexts] = useState({}); 
+    const [commentTexts, setCommentTexts] = useState({});
 
     const handleCommentChange = (articleId, value) => {
         setCommentTexts((prev) => ({ ...prev, [articleId]: value }));
@@ -29,15 +29,16 @@ export default function Welcome() {
     const handleLikeToggle = (article) => {
         if (!auth) return;
 
-        const likedByUser = article.likes.some((like) => like.user_id === auth.id);
-        if (likedByUser) {
-            const like = article.likes.find((like) => like.user_id === auth.id);
+        const like = article.likes.find((like) => like.user_id === auth.id);
+        console.log('Like trouvé :', like);
+        if (like) {
             router.delete(`/likes/${like.id}`);
         } else {
             router.post('/likes', { article_id: article.id });
         }
     };
-     const handleDelete = (articleId) => {
+
+    const handleDelete = (articleId) => {
         if (!confirm('Voulez-vous vraiment supprimer cet article ?')) return;
         router.delete(`/articles/${articleId}`);
     };
@@ -58,13 +59,13 @@ export default function Welcome() {
                         return (
                             <li key={article.id} className="rounded border p-4 shadow-sm">
                                 {auth?.role === 'webmaster' && (
-                                <button
-                                    onClick={() => handleDelete(article.id)}
-                                    className=" top-2 right-2 rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700"
-                                >
-                                    Supprimer
-                                </button>
-                            )}
+                                    <button
+                                        onClick={() => handleDelete(article.id)}
+                                        className="top-2 right-2 rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700"
+                                    >
+                                        Supprimer
+                                    </button>
+                                )}
                                 <h3 className="mb-2 text-xl font-semibold">{article.title}</h3>
                                 <p className="mb-2">{article.content}</p>
                                 <p className="text-sm text-gray-600">
@@ -114,7 +115,6 @@ export default function Welcome() {
                                     ) : (
                                         <p className="text-gray-500 italic">Connectez-vous pour commenter.</p>
                                     )}
-                                    
                                 </div>
                             </li>
                         );
