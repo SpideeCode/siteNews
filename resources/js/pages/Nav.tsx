@@ -24,7 +24,7 @@ export default function Nav() {
 
     return (
         <nav className="flex flex-wrap items-center justify-between bg-gray-800 px-6 py-4 text-white">
-            <div className="text-xl font-bold">📰 Mon Site</div>
+            <div className="text-xl font-bold">Mon Site</div>
 
             <div className="flex items-center gap-4">
                 <Link href="/" className="hover:underline">

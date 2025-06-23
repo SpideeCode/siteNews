@@ -8,7 +8,7 @@ export default function AdminDashboard() {
    
     <div className="min-h-screen bg-white text-black p-6">
          <Nav />
-      <h1 className="text-3xl font-bold mb-6">📊 Tableau de bord Admin</h1>
+      <h1 className="text-3xl font-bold mb-6">Tableau de bord Admin</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <StatCard title="Utilisateurs" count={stats.users} />

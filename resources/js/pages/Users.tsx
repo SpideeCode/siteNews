@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { router, usePage } from '@inertiajs/react';
+import Nav from './Nav';
 
 export default function Users() {
   const { users } = usePage().props;
@@ -37,6 +38,7 @@ export default function Users() {
 
   return (
     <div className=" mx-auto p-6 text-black bg-white min-h-screen">
+        <Nav />
       <h1 className="mb-6 text-3xl font-bold">Gestion des utilisateurs</h1>
 
       <form onSubmit={handleCreateUser} className="mb-8 border border-gray-300 rounded p-4 bg-gray-50">
@@ -119,14 +121,6 @@ export default function Users() {
                 </select>
               </td>
               <td className="border border-gray-300 px-4 py-2 text-center space-x-2">
-                {/* <button
-                  onClick={() => alert('La modification des autres infos n’est pas encore implémentée')}
-                  className="rounded bg-gray-700 text-white px-3 py-1 hover:bg-gray-600"
-                  type="button"
-                >
-                  Modifier
-                </button> */}
-
                 <button
                   onClick={() => handleDeleteUser(user.id)}
                   className="rounded bg-red-600 text-white px-3 py-1 hover:bg-red-700"

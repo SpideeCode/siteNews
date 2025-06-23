@@ -5,11 +5,9 @@ import Nav from './Nav';
 export default function WebmasterManage() {
   const { categories, tags } = usePage().props;
 
-  // States pour nouveaux inputs
   const [newCategory, setNewCategory] = useState('');
   const [newTag, setNewTag] = useState('');
 
-  // Ajouter catégorie
   const addCategory = (e) => {
     e.preventDefault();
     if (!newCategory.trim()) return;
@@ -19,7 +17,6 @@ export default function WebmasterManage() {
     });
   };
 
-  // Ajouter tag
   const addTag = (e) => {
     e.preventDefault();
     if (!newTag.trim()) return;
@@ -29,13 +26,11 @@ export default function WebmasterManage() {
     });
   };
 
-  // Supprimer catégorie
   const deleteCategory = (id) => {
     if (!confirm('Confirmer la suppression de cette catégorie ?')) return;
     router.delete(`/categories/${id}`);
   };
 
-  // Supprimer tag
   const deleteTag = (id) => {
     if (!confirm('Confirmer la suppression de ce tag ?')) return;
     router.delete(`/tags/${id}`);
@@ -47,7 +42,6 @@ export default function WebmasterManage() {
       <div className="max-w-4xl mx-auto p-6 space-y-10">
         <h1 className="text-3xl font-bold mb-6">Gestion des catégories et tags</h1>
 
-        {/* Gestion catégories */}
         <section>
           <h2 className="text-2xl font-semibold mb-4">Catégories</h2>
 
@@ -83,7 +77,6 @@ export default function WebmasterManage() {
           </ul>
         </section>
 
-        {/* Gestion tags */}
         <section>
           <h2 className="text-2xl font-semibold mb-4">Tags</h2>
 
