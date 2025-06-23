@@ -4,7 +4,7 @@ import Nav from './Nav';
 
 export default function Welcome() {
     const { articles, auth } = usePage().props;
-    const [commentTexts, setCommentTexts] = useState({}); // pour stocker les commentaires en cours par article
+    const [commentTexts, setCommentTexts] = useState({}); 
 
     const handleCommentChange = (articleId, value) => {
         setCommentTexts((prev) => ({ ...prev, [articleId]: value }));

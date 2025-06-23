@@ -9,10 +9,12 @@ class WebmasterPass
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->user() || $request->user()->role !== 'webmaster') {
-            return redirect('/');
+        $role = $request->user()->role;
+
+        if (in_array($role, ['webmaster', 'admin'])) {
+            return $next($request);
         }
 
-        return $next($request);
+        abort(403);
     }
 }

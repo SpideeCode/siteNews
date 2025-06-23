@@ -9,10 +9,12 @@ class AdminPass
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->user() || $request->user()->role !== 'admin') {
-            return redirect('/');
+        $role = $request->user()->role;
+
+        if ($role === 'admin') {
+            return $next($request);
         }
 
-        return $next($request);
+        abort(403);
     }
 }

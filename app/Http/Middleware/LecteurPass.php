@@ -9,10 +9,13 @@ class LecteurPass
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->user() || $request->user()->role !== 'lecteur') {
-            return redirect('/');
+        $role = $request->user()->role; 
+
+        
+        if (in_array($role, ['lecteur', 'auteur', 'webmaster', 'admin'])) {
+            return $next($request);
         }
 
-        return $next($request);
+        abort(403);
     }
 }

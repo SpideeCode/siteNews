@@ -9,10 +9,12 @@ class AuteurPass
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->user() || $request->user()->role !== 'auteur') {
-            return redirect('/');
+        $role = $request->user()->role;
+
+        if (in_array($role, ['auteur', 'webmaster', 'admin'])) {
+            return $next($request);
         }
 
-        return $next($request);
+        abort(403);
     }
 }
