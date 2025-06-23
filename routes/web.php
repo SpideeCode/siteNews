@@ -1,11 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Models\Article;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    $articles = Article::with(['category', 'tags', 'user', 'likes'])->get();
+    return Inertia::render('welcome', [
+        'articles' => $articles,
+        'auth' => auth()->user(),
+    ]);
 })->name('home');
+
+
+
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
