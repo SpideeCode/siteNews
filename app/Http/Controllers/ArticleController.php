@@ -7,40 +7,57 @@ use App\Models\Category;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
+
+
+
 
 class ArticleController extends Controller
 {
     public function index()
-{
-    $articles = Article::with(['category', 'tags', 'user', 'likes'])->get();
+    {
+        $articles = Article::with(['category', 'tags', 'user', 'likes'])->get();
 
-    return Inertia::render('Welcome', [
-        'articles' => $articles
-    ]);
-}
+        return Inertia::render('Welcome', [
+            'articles' => $articles
+        ]);
+    }
 
 
     public function create()
     {
         $categories = Category::all();
         $tags = Tag::all();
-        return Inertia::render('Articles/Create', [
+
+        return Inertia::render('CreateArticle', [
             'categories' => $categories,
-            'tags' => $tags
+            'tags' => $tags,
         ]);
     }
 
     public function store(Request $request)
     {
-        $article = new Article();
-        $article->title = $request->title;
-        $article->content = $request->content;
-        $article->category_id = $request->category_id;
-        $article->user_id = auth()->id();
-        $article->save();
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
+            'tags' => 'array',
+            'tags.*' => 'exists:tags,id',
+        ]);
 
-        $article->tags()->attach($request->tag_ids);
+        $article = Article::create([
+            'title' => $data['title'],
+            'content' => $data['content'],
+            'category_id' => $data['category_id'],
+            'user_id' => auth()->id(),
+        ]);
+
+        $article->tags()->sync($data['tags'] ?? []);
+
+        return redirect()->route('auteur.articles');
     }
+
+
 
     public function show(Article $article)
     {
@@ -53,26 +70,58 @@ class ArticleController extends Controller
     {
         $categories = Category::all();
         $tags = Tag::all();
-        return Inertia::render('Articles/Edit', [
-            'article' => $article->load('tags'),
+
+        $article->load('tags');
+
+        return Inertia::render('EditArticle', [
+            'article' => $article,
             'categories' => $categories,
-            'tags' => $tags
+            'tags' => $tags,
         ]);
     }
 
+
+
     public function update(Request $request, Article $article)
     {
-        $article->title = $request->title;
-        $article->content = $request->content;
-        $article->category_id = $request->category_id;
-        $article->save();
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
+            'tags' => 'array',
+            'tags.*' => 'exists:tags,id',
+        ]);
 
-        $article->tags()->sync($request->tag_ids);
+        $article->update([
+            'title' => $data['title'],
+            'content' => $data['content'],
+            'category_id' => $data['category_id'],
+        ]);
+
+        $article->tags()->sync($data['tags'] ?? []);
+
+        return redirect()->route('auteur.articles');
     }
+
+
 
     public function destroy(Article $article)
     {
-        $article->tags()->detach();
+        $article->comments()->delete();
+        $article->likes()->delete();
         $article->delete();
+
+        return redirect()->back()->with('success', 'Article supprimé.');
+    }
+
+
+    public function myArticles()
+    {
+        $articles = auth()->user()->articles()->with(['category', 'tags'])->get();
+        $categories = \App\Models\Category::all();
+        return Inertia::render('AuthorArticles', [
+            'articles' => $articles,
+            'auth' => auth()->user(),
+        ]);
     }
 }

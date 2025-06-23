@@ -36,11 +36,12 @@ Route::middleware(['auth', LecteurPass::class])->group(function () {
 });
 
 Route::middleware(['auth', AuteurPass::class])->group(function () {
-    Route::get('/articles/create', [ArticleController::class, 'create']);
+    Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');
     Route::post('/articles', [ArticleController::class, 'store']);
-    Route::get('/articles/{article}/edit', [ArticleController::class, 'edit']);
+    Route::get('/articles/{article}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
     Route::put('/articles/{article}', [ArticleController::class, 'update']);
     Route::delete('/articles/{article}', [ArticleController::class, 'destroy']);
+    Route::get('/mes-articles', [ArticleController::class, 'myArticles'])->name('auteur.articles');    
 });
 
 Route::middleware(['auth', WebmasterPass::class])->group(function () {
