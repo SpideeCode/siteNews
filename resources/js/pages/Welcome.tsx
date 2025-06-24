@@ -1,10 +1,17 @@
+import { useEffect, useState } from 'react';
 import { router, usePage } from '@inertiajs/react';
-import { useState } from 'react';
 import Nav from './Nav';
+import SearchFilter from './SearchFilter';
 
 export default function Welcome() {
   const { articlesByCategory, auth } = usePage().props;
   const [commentTexts, setCommentTexts] = useState({});
+  const allArticles = Object.values(articlesByCategory).flat();
+  const [filteredArticles, setFilteredArticles] = useState(allArticles);
+
+  useEffect(() => {
+    setFilteredArticles(allArticles); 
+  }, [articlesByCategory]);
 
   const handleCommentChange = (articleId, value) => {
     setCommentTexts((prev) => ({ ...prev, [articleId]: value }));
@@ -34,17 +41,27 @@ export default function Welcome() {
     router.delete(`/articles/${articleId}`);
   };
 
+  const grouped = filteredArticles.reduce((acc, article) => {
+    const cat = article.category?.name || 'Sans catégorie';
+    acc[cat] = acc[cat] || [];
+    acc[cat].push(article);
+    return acc;
+  }, {});
+
   return (
     <div className="mx-auto min-h-screen bg-white p-6 text-black">
       <Nav />
       <h2 className="mb-6 text-3xl font-bold">Articles par catégorie</h2>
 
-      {Object.keys(articlesByCategory).map((categoryName) => (
+      
+      <SearchFilter articles={allArticles} onFilter={setFilteredArticles} />
+
+      {Object.keys(grouped).map((categoryName) => (
         <section key={categoryName} className="mb-12">
           <h3 className="text-2xl font-semibold mb-4 border-b border-gray-300 pb-2">{categoryName}</h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {articlesByCategory[categoryName].map((article) => {
+            {grouped[categoryName].map((article) => {
               const likedByUser = auth && article.likes.some((like) => like.user_id === auth.id);
 
               return (
@@ -53,7 +70,6 @@ export default function Welcome() {
                   className="flex flex-col justify-between rounded-lg border border-gray-300 bg-white shadow-sm p-4"
                   style={{ minHeight: '420px' }}
                 >
-                  {/* Supprimer */}
                   {auth?.role === 'webmaster' && (
                     <div className="flex justify-end mb-2">
                       <button
@@ -65,19 +81,16 @@ export default function Welcome() {
                     </div>
                   )}
 
-                  {/* Titre + contenu */}
                   <div className="flex-grow">
                     <h4 className="text-lg font-bold text-gray-900 mb-1">{article.title}</h4>
                     <p className="text-sm text-gray-800 line-clamp-4">{article.content}</p>
                   </div>
 
-                  {/* Infos auteur / tags */}
                   <div className="text-xs text-gray-600 mt-2">
                     <p>Par : <span className="font-medium">{article.user?.name || 'Anonyme'}</span></p>
                     <p>Tags : {article.tags.length > 0 ? article.tags.map(tag => tag.name).join(', ') : 'Aucun'}</p>
                   </div>
 
-                  {/* Like bouton */}
                   <div className="mt-3">
                     <button
                       onClick={() => handleLikeToggle(article)}
@@ -89,7 +102,6 @@ export default function Welcome() {
                     </button>
                   </div>
 
-                  {/* Dernier commentaire */}
                   <div className="bg-gray-100 rounded p-3 mt-3 text-sm">
                     <h5 className="font-semibold text-gray-700 mb-1">Dernier commentaire</h5>
                     {article.latest_comment ? (
@@ -102,7 +114,6 @@ export default function Welcome() {
                     )}
                   </div>
 
-                  {/* Formulaire commentaire */}
                   {auth ? (
                     <form
                       onSubmit={(e) => {

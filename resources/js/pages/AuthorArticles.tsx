@@ -1,6 +1,7 @@
 import Nav from '@/Pages/Nav';
 import { Link, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import SearchFilter from './SearchFilter';
 
 export default function AuthorArticles({ articles, categories, tags }) {
     const [showModal, setShowModal] = useState(false);
@@ -11,6 +12,12 @@ export default function AuthorArticles({ articles, categories, tags }) {
         tag_input: '',
         selectedTags: [],
     });
+
+    const [filteredArticles, setFilteredArticles] = useState(articles);
+
+    useEffect(() => {
+        setFilteredArticles(articles);
+    }, [articles]);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -74,11 +81,16 @@ export default function AuthorArticles({ articles, categories, tags }) {
                     </Link>
                 </div>
 
-                {articles.length === 0 ? (
-                    <p className="text-gray-700">Vous n’avez encore publié aucun article.</p>
+                {/* Search Filter */}
+                <div className="mb-4">
+                    <SearchFilter articles={articles} onFilter={setFilteredArticles} />
+                </div>
+
+                {filteredArticles.length === 0 ? (
+                    <p className="text-gray-700">Aucun article ne correspond à votre recherche.</p>
                 ) : (
                     <ul className="space-y-4">
-                        {articles.map((article) => (
+                        {filteredArticles.map((article) => (
                             <li key={article.id} className="rounded border p-4 shadow-sm">
                                 <h2 className="text-xl font-semibold">{article.title}</h2>
                                 <p className="text-gray-700">{article.content}</p>
@@ -90,7 +102,10 @@ export default function AuthorArticles({ articles, categories, tags }) {
                                     <Link href={`/articles/${article.id}/edit`} className="text-blue-600 hover:underline">
                                         ✏️ Modifier
                                     </Link>
-                                    <button onClick={() => router.delete(`/articles/${article.id}`)} className="text-red-600 hover:underline">
+                                    <button
+                                        onClick={() => router.delete(`/articles/${article.id}`)}
+                                        className="text-red-600 hover:underline"
+                                    >
                                         🗑️ Supprimer
                                     </button>
                                 </div>
