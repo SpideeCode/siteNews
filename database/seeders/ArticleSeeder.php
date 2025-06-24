@@ -4,30 +4,27 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Article;
+use App\Models\Category;
+use Faker\Factory as Faker;
 
 class ArticleSeeder extends Seeder
 {
     public function run()
     {
-        Article::create([
-            'title' => 'Premier article',
-            'content' => 'Contenu de l\'article 1',
-            'category_id' => 1,
-            'user_id' => 1,
-        ]);
+        $faker = Faker::create();
 
-        Article::create([
-            'title' => 'Deuxième article',
-            'content' => 'Contenu de l\'article 2',
-            'category_id' => 2,
-            'user_id' => 2,
-        ]);
+        $userIds = [1, 2, 3, 4]; 
+        $categories = Category::all();
 
-        Article::create([
-            'title' => 'Troisième article',
-            'content' => 'Contenu de l\'article 3',
-            'category_id' => 3,
-            'user_id' => 3,
-        ]);
+        foreach ($categories as $category) {
+            for ($i = 1; $i <= 5; $i++) {
+                Article::create([
+                    'title' => $faker->sentence(6, true),
+                    'content' => $faker->paragraphs(rand(3, 6), true),
+                    'category_id' => $category->id,
+                    'user_id' => $faker->randomElement($userIds),
+                ]);
+            }
+        }
     }
 }

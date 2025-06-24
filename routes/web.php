@@ -21,18 +21,21 @@ use App\Http\Middleware\LecteurPass;
 use Illuminate\Http\Request;
 
 Route::get('/', function () {
-    $articles = Article::with(['category', 'tags', 'user', 'likes', 'latestComment.user'])->get();
+    $articles = \App\Models\Article::with(['category', 'tags', 'user', 'likes', 'latestComment.user'])->get();
+
+    $grouped = $articles->groupBy(function ($article) {
+        return $article->category?->name ?? 'Sans catégorie';
+    });
 
     return Inertia::render('welcome', [
-        'articles' => $articles,
-        'auth' => auth()->user() ? [
+        'articlesByCategory' => $grouped,
+        'auth' => auth()->check() ? [
             'id' => auth()->id(),
             'name' => auth()->user()->name,
             'role' => auth()->user()->role,
         ] : null,
     ]);
 })->name('home');
-
 
 Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
