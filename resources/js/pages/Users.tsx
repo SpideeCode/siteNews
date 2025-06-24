@@ -92,47 +92,84 @@ export default function Users() {
         </button>
       </form>
 
-      <table className="w-full border-collapse border border-gray-300">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border border-gray-300 px-4 py-2 text-left">ID</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Nom</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Email</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Rôle</th>
-            <th className="border border-gray-300 px-4 py-2 text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user: any) => (
-            <tr key={user.id} className="hover:bg-gray-50">
-              <td className="border border-gray-300 px-4 py-2">{user.id}</td>
-              <td className="border border-gray-300 px-4 py-2">{user.name}</td>
-              <td className="border border-gray-300 px-4 py-2">{user.email}</td>
-              <td className="border border-gray-300 px-4 py-2">
-                <select
-                  value={editRole[user.id] ?? user.role}
-                  onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                  className="border border-gray-400 rounded px-2 py-1 focus:outline-none focus:ring focus:ring-gray-400"
-                >
-                  <option value="lecteur">Lecteur</option>
-                  <option value="auteur">Auteur</option>
-                  <option value="webmaster">Webmaster</option>
-                  <option value="admin">Admin</option>
-                </select>
-              </td>
-              <td className="border border-gray-300 px-4 py-2 text-center space-x-2">
-                <button
-                  onClick={() => handleDeleteUser(user.id)}
-                  className="rounded bg-red-600 text-white px-3 py-1 hover:bg-red-700"
-                  type="button"
-                >
-                  Supprimer
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* Mode tableau pour desktop */}
+<div className="hidden md:block">
+  <table className="w-full border-collapse border border-gray-300">
+    <thead>
+      <tr className="bg-gray-100">
+        <th className="border border-gray-300 px-4 py-2 text-left">ID</th>
+        <th className="border border-gray-300 px-4 py-2 text-left">Nom</th>
+        <th className="border border-gray-300 px-4 py-2 text-left">Email</th>
+        <th className="border border-gray-300 px-4 py-2 text-left">Rôle</th>
+        <th className="border border-gray-300 px-4 py-2 text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {users.map((user: any) => (
+        <tr key={user.id} className="hover:bg-gray-50">
+          <td className="border border-gray-300 px-4 py-2">{user.id}</td>
+          <td className="border border-gray-300 px-4 py-2">{user.name}</td>
+          <td className="border border-gray-300 px-4 py-2">{user.email}</td>
+          <td className="border border-gray-300 px-4 py-2">
+            <select
+              value={editRole[user.id] ?? user.role}
+              onChange={(e) => handleRoleChange(user.id, e.target.value)}
+              className="border border-gray-400 rounded px-2 py-1 focus:outline-none focus:ring focus:ring-gray-400"
+            >
+              <option value="lecteur">Lecteur</option>
+              <option value="auteur">Auteur</option>
+              <option value="webmaster">Webmaster</option>
+              <option value="admin">Admin</option>
+            </select>
+          </td>
+          <td className="border border-gray-300 px-4 py-2 text-center space-x-2">
+            <button
+              onClick={() => handleDeleteUser(user.id)}
+              className="rounded bg-red-600 text-white px-3 py-1 hover:bg-red-700"
+              type="button"
+            >
+              Supprimer
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+{/* Mode cartes pour mobile */}
+<div className="md:hidden space-y-4">
+  {users.map((user: any) => (
+    <div key={user.id} className="border border-gray-300 rounded p-4 bg-gray-50 shadow-sm">
+      <p><span className="font-semibold">ID :</span> {user.id}</p>
+      <p><span className="font-semibold">Nom :</span> {user.name}</p>
+      <p><span className="font-semibold">Email :</span> {user.email}</p>
+
+      <div className="mt-2">
+        <label className="block text-sm font-semibold mb-1">Rôle</label>
+        <select
+          value={editRole[user.id] ?? user.role}
+          onChange={(e) => handleRoleChange(user.id, e.target.value)}
+          className="w-full border border-gray-400 rounded px-2 py-1 focus:outline-none focus:ring focus:ring-gray-400"
+        >
+          <option value="lecteur">Lecteur</option>
+          <option value="auteur">Auteur</option>
+          <option value="webmaster">Webmaster</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+
+      <button
+        onClick={() => handleDeleteUser(user.id)}
+        className="mt-4 w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+        type="button"
+      >
+        Supprimer
+      </button>
+    </div>
+  ))}
+</div>
+
     </div>
   );
 }
