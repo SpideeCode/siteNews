@@ -1,5 +1,6 @@
 import { router, Link } from "@inertiajs/react";
 import { useState } from "react";
+import Nav from "../Nav";
 
 function Login() {
 
