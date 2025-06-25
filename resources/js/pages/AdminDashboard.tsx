@@ -6,8 +6,9 @@ export default function AdminDashboard() {
 
   return (
    
-    <div className="min-h-screen bg-white text-black p-6">
+    <div className="min-h-screen bg-white text-black ">
          <Nav />
+         <div className='p-6'>
       <h1 className="text-3xl font-bold mb-6">Tableau de bord Admin</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -16,6 +17,7 @@ export default function AdminDashboard() {
         <StatCard title="Commentaires" count={stats.comments} />
         <StatCard title="Catégories" count={stats.categories} />
         <StatCard title="Tags" count={stats.tags} />
+      </div>
       </div>
     </div>
   );
@@ -27,5 +29,6 @@ function StatCard({ title, count }: { title: string; count: number }) {
       <h2 className="text-lg font-semibold mb-1">{title}</h2>
       <p className="text-2xl font-bold">{count}</p>
     </div>
+    
   );
 }

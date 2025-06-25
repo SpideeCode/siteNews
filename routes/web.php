@@ -129,6 +129,9 @@ Route::post('/users', function (Request $request) {
 
   
     Route::delete('/users/{user}', function (User $user) {
+        $user->articles()->delete();
+        $user->comments()->delete();
+        $user->likes()->delete();
         $user->delete();
 
         return redirect()->back();

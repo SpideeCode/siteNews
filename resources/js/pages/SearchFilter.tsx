@@ -34,7 +34,7 @@ export default function SearchFilter({ articles, onFilter }: Props) {
   }, [query, articles, onFilter]);
 
   return (
-    <div className="mb-6">
+    <div className="my-6">
       <input
         type="text"
         placeholder="Recherche par titre, catégorie, tag ou auteur..."
