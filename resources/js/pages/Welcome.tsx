@@ -31,6 +31,7 @@ export default function Welcome() {
     };
 
     const handleLikeToggle = (article) => {
+        
         if (!auth) return;
         const like = article.likes.find((like) => like.user_id === auth.id);
         if (like) {
