@@ -20,6 +20,9 @@ use App\Http\Middleware\LecteurPass;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TestMail;
+
 Route::get('/', function () {
     $articles = \App\Models\Article::with(['category', 'tags', 'user', 'likes', 'latestComment.user'])->get();
 
@@ -95,25 +98,25 @@ Route::middleware(['auth', AdminPass::class])->group(function () {
         ]);
     })->name('users.index');
 
-    
 
-Route::post('/users', function (Request $request) {
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users',
-        'password' => 'required|string|min:6',
-        'role' => 'required|in:lecteur,auteur,webmaster,admin',
-    ]);
 
-    \App\Models\User::create([
-        'name' => $validated['name'],
-        'email' => $validated['email'],
-        'password' => \Illuminate\Support\Facades\Hash::make($validated['password']),
-        'role' => $validated['role'],
-    ]);
+    Route::post('/users', function (Request $request) {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string|min:6',
+            'role' => 'required|in:lecteur,auteur,webmaster,admin',
+        ]);
 
-    return redirect()->back();
-})->middleware(['auth', \App\Http\Middleware\AdminPass::class]);
+        \App\Models\User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => \Illuminate\Support\Facades\Hash::make($validated['password']),
+            'role' => $validated['role'],
+        ]);
+
+        return redirect()->back();
+    })->middleware(['auth', \App\Http\Middleware\AdminPass::class]);
 
 
     Route::post('/users/{user}/update-role', function (Request $request, User $user) {
@@ -127,7 +130,7 @@ Route::post('/users', function (Request $request) {
         return redirect()->back();
     });
 
-  
+
     Route::delete('/users/{user}', function (User $user) {
         $user->articles()->delete();
         $user->comments()->delete();
@@ -135,6 +138,13 @@ Route::post('/users', function (Request $request) {
         $user->delete();
 
         return redirect()->back();
+    });
+
+
+
+    Route::get('/test-mail', function () {
+        Mail::to('ibiberisha02@gmail.com')->send(new TestMail());
+        return 'Mail envoyé !';
     });
 });
 

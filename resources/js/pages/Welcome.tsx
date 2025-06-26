@@ -94,7 +94,9 @@ export default function Welcome() {
                                     )}
 
                                     <div className="flex-grow">
+                                        <h4 className="mb-1 text-lg font-bold text-gray-500">{article.category?.name}</h4>
                                         <h4 className="mb-1 text-lg font-bold text-gray-900">{article.title}</h4>
+                                        
                                         <p className="line-clamp-4 text-sm text-gray-800">{article.content}</p>
                                     </div>
 

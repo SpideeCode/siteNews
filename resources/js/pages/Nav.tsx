@@ -18,7 +18,7 @@ export default function Nav() {
     return (
         <nav className="bg-gray-800 text-white">
             <div className=" px-6 py-4 flex items-center justify-between">
-                <div className="text-xl font-bold">Mon Site</div>
+                <div className="text-xl font-bold">SiteNews</div>
 
                 {/* Burger button */}
                 <div className="md:hidden">
