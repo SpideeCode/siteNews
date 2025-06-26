@@ -8,7 +8,10 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\ArticlePublished;
+use Illuminate\Support\Facades\Mail;
 
+use App\Models\User;
 
 
 
@@ -53,6 +56,15 @@ class ArticleController extends Controller
         ]);
 
         $article->tags()->sync($data['tags'] ?? []);
+
+
+
+        $users = User::all()->unique('email');
+
+        foreach ($users as $user) {
+            Mail::to($user->email)->send(new ArticlePublished($article, $user));
+        }
+
 
         return redirect()->route('auteur.articles');
     }
