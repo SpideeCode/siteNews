@@ -1,4 +1,3 @@
-````markdown
 # 📰 Laravel + Inertia.js + React - Blog Application
 
 Ce projet est une application Laravel 12 utilisant Inertia.js, React, Tailwind CSS et une base de données MySQL.  
